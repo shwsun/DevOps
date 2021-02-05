@@ -1,38 +1,28 @@
-#스왑 오프
-sudo swapoff -a
-## master 
-sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.56.10
-# sudo kubeadm config images pull
-# [config/images] Pulled k8s.gcr.io/kube-apiserver:v1.20.2
-# [config/images] Pulled k8s.gcr.io/kube-controller-manager:v1.20.2
-# [config/images] Pulled k8s.gcr.io/kube-scheduler:v1.20.2
-# [config/images] Pulled k8s.gcr.io/kube-proxy:v1.20.2
-# [config/images] Pulled k8s.gcr.io/pause:3.2
-# [config/images] Pulled k8s.gcr.io/etcd:3.4.13-0
-# [config/images] Pulled k8s.gcr.io/coredns:1.7.0
-# sudo docker tag k8s.gcr.io/kube-proxy:v1.20.2 shwsun/kube-proxy:v1.20.2
-# sudo docker tag k8s.gcr.io/kube-apiserver:v1.20.2 shwsun/kube-apiserver:v1.20.2
-# sudo docker tag k8s.gcr.io/kube-scheduler:v1.20.2 shwsun/kube-scheduler:v1.20.2
-# sudo docker tag k8s.gcr.io/kube-controller-manager:v1.20.2 shwsun/kube-controller-manager:v1.20.2
-# sudo docker tag k8s.gcr.io/pause:3.2 shwsun/pause:3.2
-# sudo docker tag k8s.gcr.io/etcd:3.4.13-0 shwsun/etcd:3.4.13-0
-# sudo docker tag k8s.gcr.io/coredns:1.7.0 shwsun/coredns:1.7.0
+# pod network 설치. 임시.
+sudo docker pull shwsun/flannel:v0.13.1-rc1
+sudo docker image tag shwsun/flannel:v0.13.1-rc1  quay.io/coreos/flannel:v0.13.1-rc1
 
-# sudo docker push shwsun/kube-proxy:v1.20.2
-# sudo docker push shwsun/kube-apiserver:v1.20.2
-# sudo docker push shwsun/kube-scheduler:v1.20.2
-# sudo docker push shwsun/kube-controller-manager:v1.20.2
-# sudo docker push shwsun/pause:3.2
-# sudo docker push shwsun/etcd:3.4.13-0
-# sudo docker push shwsun/coredns:1.7.0
+# # run : start_master.sh 로 이동.
+# sudo swapoff -a
+# sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.56.10
 
-export HOME=/home/vagrant
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown vagrant:vagrant $HOME/.kube/config 
-#sudo chown $(id -u):$(id -g) $HOME/.kube/config 
-#kubectl get nodes
-#kubectl get pods -A 
+# sudo kubeadm join 192.168.56.10:6443 --token 21aggo.a3sis5cbsqgbqs8j \
+#    --discovery-token-ca-cert-hash sha256:fc4bc3b920f1fdb0d1ddd107ca04c095d3bbab699da32c53aea12766951f797c
+# [ERROR] ... /etc/kubernetes/kubelet.conf already exists
 
-# web UI 
-#kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+# # 테스트 : user 계정으로 실행하는 경우. 아래와 같이 config 수정한 경우에는 sudo로 실행하면 에러 발생한다. 
+# export HOME=/home/vagrant
+# mkdir -p $HOME/.kube
+# sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+# # #sudo chown $(id -u):$(id -g) $HOME/.kube/config
+# sudo chown vagrant:vagrant $HOME/.kube/config
+# # kubectl get nodes 
+
+# if run as root 
+# export KUBECONFIG=/etc/kubernetes/admin.conf
+# kubectl get nodes 
+#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml 
+# quay.io/coreos/flannel:v0.13.1-rc1 
+# image: quay.io/coreos/flannel:v0.13.1-rc1
+# kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
